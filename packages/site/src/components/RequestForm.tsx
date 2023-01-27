@@ -196,24 +196,26 @@ const RequestForm = () => {
       />
       <Box
         sx={{
-          width: '100%',
+          width: '60rem',
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-          padding: '0.65rem',
         }}
       >
         <Button
           variant="outlined"
           style={{
-            margin: '1rem',
+            marginTop: '1rem',
             width: '15rem',
           }}
         >
           Clear
         </Button>
-        <Button variant="contained" style={{ margin: '1rem', width: '15rem' }}>
+        <Button
+          variant="contained"
+          style={{ marginTop: '1rem', width: '15rem' }}
+        >
           Request
         </Button>
       </Box>
