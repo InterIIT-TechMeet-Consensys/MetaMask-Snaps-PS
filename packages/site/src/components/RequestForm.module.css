@@ -1,0 +1,27 @@
+.form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 1rem;
+  height: 0rem;
+}
+
+.mainInput {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 20%;
+}
+
+.mainInput input {
+  width: 50%;
+  height: 100%;
+}
+
+.description {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

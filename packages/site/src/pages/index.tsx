@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
@@ -15,6 +15,7 @@ import {
   Card,
 } from '../components';
 import Layout from '../components/UI/Layout';
+import RequestForm from '../components/RequestForm';
 
 const Container = styled.div`
   display: flex;
@@ -130,6 +131,8 @@ const Index = () => {
   return (
     <>
       <Layout>
+        <RequestForm />
+        {/*
         <Container>
           <Heading>
             Welcome to <Span>template-snap</Span>
@@ -215,6 +218,7 @@ const Index = () => {
             </Notice>
           </CardContainer>
         </Container>
+        */}
       </Layout>
     </>
   );
