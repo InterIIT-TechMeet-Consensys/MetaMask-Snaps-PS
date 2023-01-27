@@ -16,6 +16,7 @@ import {
 } from '../components';
 import Layout from '../components/UI/Layout';
 import RequestForm from '../components/RequestForm';
+import { Box } from '@mui/system';
 
 const Container = styled.div`
   display: flex;
@@ -31,6 +32,7 @@ const Container = styled.div`
     margin-bottom: 2rem;
     width: auto;
   }
+  background-color: '#171275';
 `;
 
 const Heading = styled.h1`
