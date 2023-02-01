@@ -13273,7 +13273,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-gyp-build@npm:^4.3.0":
+"node-gyp-build-optional-packages@npm:5.0.7":
+  version: 5.0.7
+  resolution: "node-gyp-build-optional-packages@npm:5.0.7"
+  bin:
+    node-gyp-build-optional-packages: bin.js
+    node-gyp-build-optional-packages-optional: optional.js
+    node-gyp-build-optional-packages-test: build-test.js
+  checksum: bcb4537af15bcb3811914ea0db8f69284ca10db1cc7543a167a4c41ae4b9b5044b133f789fdadad0b7adc6931f6ae7def3c75b0bc7b05836881aae52400163e6
+  languageName: node
+  linkType: hard
+
+"node-gyp-build@npm:^4.2.0, node-gyp-build@npm:^4.3.0":
   version: 4.6.0
   resolution: "node-gyp-build@npm:4.6.0"
   bin:
@@ -15434,7 +15445,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve-alpn@npm:^1.0.0":
+"reselect@npm:^4.1.6":
+  version: 4.1.7
+  resolution: "reselect@npm:4.1.7"
+  checksum: 738d8e2b8f0dca154ad29de6a209c9fbca2d70ae6788fd85df87f2c74b95a65bbf2d16d43a9e2faff39de34d17a29d706ba08a6b2ee5660c09589edbd19af7e1
+  languageName: node
+  linkType: hard
+
+"resolve-alpn@npm:^1.0.0, resolve-alpn@npm:^1.2.0":
   version: 1.2.1
   resolution: "resolve-alpn@npm:1.2.1"
   checksum: f558071fcb2c60b04054c99aebd572a2af97ef64128d59bef7ab73bd50d896a222a056de40ffc545b633d99b304c259ea9d0c06830d5c867c34f0bfa60b8eae0
@@ -16879,9 +16897,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"synckit@npm:0.8.4":
-  version: 0.8.4
-  resolution: "synckit@npm:0.8.4"
+"swarm-js@npm:^0.1.40":
+  version: 0.1.42
+  resolution: "swarm-js@npm:0.1.42"
+  dependencies:
+    bluebird: ^3.5.0
+    buffer: ^5.0.5
+    eth-lib: ^0.1.26
+    fs-extra: ^4.0.2
+    got: ^11.8.5
+    mime-types: ^2.1.16
+    mkdirp-promise: ^5.0.1
+    mock-fs: ^4.1.0
+    setimmediate: ^1.0.5
+    tar: ^4.0.2
+    xhr-request: ^1.0.1
+  checksum: bbb54b84232ef113ee106cf8158d1c827fbf84b309799576f61603f63d7653fde7e71df981d07f9e4c41781bbbbd72be77e5a47e6b694d6a83b96a6a20641475
+  languageName: node
+  linkType: hard
+
+"synckit@npm:0.8.5":
+  version: 0.8.5
+  resolution: "synckit@npm:0.8.5"
   dependencies:
     "@pkgr/utils": ^2.3.1
     tslib: ^2.5.0

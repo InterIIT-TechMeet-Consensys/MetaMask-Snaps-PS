@@ -117,4 +117,16 @@ export const initiateAccountDetails = async(accounts) => {
     ],
   });
 }
+
+export const getRequests = async() => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: [
+      defaultSnapOrigin,
+      {
+        method: 'getRequests',
+      }
+    ],
+  });
+}
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');
