@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useContext } from "react";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -15,7 +16,10 @@ import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import Button from "@mui/material/Button";
 
+import { MetamaskActions, MetaMaskContext } from '../../hooks';
+import { connectSnap, getSnap, logState, initiateState, connectMetamaskWallet, initiateAccountDetails } from '../../utils';
 const drawerWidth = 240;
 
 type Props = {
@@ -27,9 +31,53 @@ type Props = {
   children: React.ReactNode;
 };
 
+
 export default function Layout(props: Props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const [state, dispatch] = useContext(MetaMaskContext);
+
+  const handleConnectClick = async () => {
+    try {
+      await connectSnap();
+      console.log(state);
+      const installedSnap = await getSnap();
+      // console.log(installedSnap);
+      dispatch({
+        type: MetamaskActions.SetInstalled,
+        payload: installedSnap,
+      });
+      const accounts = await connectMetamaskWallet();
+      console.log(accounts);
+      if(accounts) {
+        await initiateAccountDetails(accounts);
+      }
+    } catch (e) {
+      console.error(e);
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
+  };
+
+  const handleLogStateClick = async () => {
+    try {
+      const logStateData = await logState();
+      console.log(logStateData);
+    } catch (e) {
+      console.error(e);
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
+  };
+
+  const handleInitiateStateClick = async () => {
+    try {
+      const state = await initiateState();
+      console.log(state);
+    } catch (e) {
+      console.error(e);
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
+  };
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -64,6 +112,10 @@ export default function Layout(props: Props) {
           </ListItem>
         ))}
       </List>
+      <Button color='success' variant='contained' onClick={handleConnectClick}> Connect </Button> <br/>
+      <p>Debugging purposes</p>
+      <Button color='success' variant='contained' onClick={handleLogStateClick}> Log State </Button> <br/>
+      <Button color='success' variant='contained' onClick={handleInitiateStateClick}> initiate State </Button>
     </div>
   );
 

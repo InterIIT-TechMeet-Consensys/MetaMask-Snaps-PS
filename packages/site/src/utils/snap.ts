@@ -67,9 +67,54 @@ export const sendHello = async () => {
       defaultSnapOrigin,
       {
         method: 'hello',
-      },
+      }
     ],
   });
 };
 
+
+export const logState = async() => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: [
+      defaultSnapOrigin,
+      {
+        method: 'logState',
+      }
+    ],
+  });
+}
+
+export const initiateState = async() => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: [
+      defaultSnapOrigin,
+      {
+        method: 'initiateState',
+      }
+    ],
+  });
+}
+
+export const connectMetamaskWallet = async() => {
+    return await window.ethereum.request({ method: 'eth_requestAccounts' });
+    // const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+}
+
+export const initiateAccountDetails = async(accounts) => {
+  const account = accounts[0];
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: [
+      defaultSnapOrigin,
+      {
+        method: 'initiateAccountDetails',
+        params: {
+          account : account
+        }
+      }
+    ],
+  });
+}
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');
