@@ -102,7 +102,7 @@ const RequestForm = () => {
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '80vh',
+        margin: '1rem',
       }}
     >
       <Box

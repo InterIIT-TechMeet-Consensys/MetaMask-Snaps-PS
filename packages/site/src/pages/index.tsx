@@ -17,6 +17,7 @@ import {
 import Layout from '../components/UI/Layout';
 import RequestForm from '../components/RequestForm';
 import { Box } from '@mui/system';
+import RequestsTable from '../components/RequestsTable';
 
 const Container = styled.div`
   display: flex;
@@ -134,6 +135,17 @@ const Index = () => {
     <>
       <Layout>
         <RequestForm />
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'column',
+            margin: '10rem',
+          }}
+        >
+          <RequestsTable />
+        </Box>
         {/*
         <Container>
           <Heading>
