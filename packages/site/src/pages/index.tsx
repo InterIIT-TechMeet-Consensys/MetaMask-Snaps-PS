@@ -19,6 +19,8 @@ import RequestForm from '../components/RequestForm';
 import { Box } from '@mui/system';
 import RequestsTable from '../components/RequestsTable';
 
+import { initiateAccountDetails } from '../utils';
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -105,6 +107,10 @@ const ErrorMessage = styled.div`
 `;
 
 const Index = () => {
+  window.ethereum.on("accountsChanged", (accounts) => {
+    // console.log(accounts);
+    initiateAccountDetails(accounts);
+  })
   const [state, dispatch] = useContext(MetaMaskContext);
 
   const handleConnectClick = async () => {
