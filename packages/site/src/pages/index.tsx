@@ -107,9 +107,13 @@ const ErrorMessage = styled.div`
 `;
 
 const Index = () => {
-  window.ethereum.on("accountsChanged", (accounts) => {
+  window.ethereum.on("accountsChanged", async (accounts) => {
     // console.log(accounts);
-    initiateAccountDetails(accounts);
+    try {
+      await initiateAccountDetails(accounts);
+    } catch(err) {
+      console.log(err);
+    }
   })
   const [state, dispatch] = useContext(MetaMaskContext);
 
