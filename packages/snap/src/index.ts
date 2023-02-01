@@ -108,6 +108,16 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) => 
         params: ['update', {...state, account : account}]
       });
 
+    case "getRequests":
+      const requests = await wallet.request({
+        method: 'snap_manageState',
+        params: ['get']
+      });
+      if(requests) {
+        return requests.web2Notifications;
+      } else {
+        return [];
+      }
     default:
       throw new Error('Method not found.');
   }

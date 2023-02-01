@@ -54,7 +54,7 @@
     "@mdi/react": "^1.6.1",
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.6",
-    "web3": "^1.8.2",
-    "@mui/x-data-grid": "^5.17.21"
+    "@mui/x-data-grid": "^5.17.21",
+    "web3": "^1.8.2"
   }
 }

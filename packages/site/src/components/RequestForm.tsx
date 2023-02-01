@@ -12,35 +12,35 @@ import {
 
 import Web3 from "web3";
 
-const PayClicked = async (details) => {
-  console.log(details);
-  const walletAddresses = (await window.ethereum.request({ method: 'eth_requestAccounts' }));
-  const userWalletAddress = walletAddresses[0];
-  const to = details.to;
-  // const value = details.value;
-  //need to figure out conversion of normal value to goereli test eth
-  const value = Web3.utils.toWei(details.value);
-  console.log(value);
-  // const value = Web3.utils.fromWei(details.value, "gwei");
-  const transactionParameters = {
-    nonce : "0x00",
-    to : to,
-    from : userWalletAddress,
-    value: value
-  }
+// const PayClicked = async (details) => {
+//   console.log(details);
+//   const walletAddresses = (await window.ethereum.request({ method: 'eth_requestAccounts' }));
+//   const userWalletAddress = walletAddresses[0];
+//   const to = details.to;
+//   // const value = details.value;
+//   //need to figure out conversion of normal value to goereli test eth
+//   const value = Web3.utils.toWei(details.value);
+//   console.log(value);
+//   // const value = Web3.utils.fromWei(details.value, "gwei");
+//   const transactionParameters = {
+//     nonce : "0x00",
+//     to : to,
+//     from : userWalletAddress,
+//     value: value
+//   }
 
-  console.log(transactionParameters);
-  try {
-    const txHash = await window.ethereum.request({
-      method: 'eth_sendTransaction',
-      params: [transactionParameters],
-    });
-    console.log(txHash)
-  } catch(err) {
-    console.log(err);
-  }
+//   console.log(transactionParameters);
+//   try {
+//     const txHash = await window.ethereum.request({
+//       method: 'eth_sendTransaction',
+//       params: [transactionParameters],
+//     });
+//     console.log(txHash)
+//   } catch(err) {
+//     console.log(err);
+//   }
   
-}
+// }
 const RequestForm = () => {
   const walletAddress = useRef<HTMLInputElement>(null);
   const amount = useRef<HTMLInputElement>(null);
@@ -62,6 +62,7 @@ const RequestForm = () => {
       return;
     }
     const walletAddresses = (await window.ethereum.request({ method: 'eth_requestAccounts' }));
+    console.log(walletAddresses);
     const userWalletAddress = walletAddresses[0];
     console.log(userWalletAddress);
     const url = "http://127.0.0.1:9000/sendNotification";

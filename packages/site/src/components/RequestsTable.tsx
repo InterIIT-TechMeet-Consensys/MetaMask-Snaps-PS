@@ -1,85 +1,104 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Icon from '@mdi/react';
 import { mdiCheck } from '@mdi/js';
 import { Typography } from '@mui/material';
+import Web3 from "web3";
 
-const PayButton = (params: GridRenderCellParams<string>) => {
-  const show = params.row.status === 'Pending';
+import {getRequests} from "./../utils";
 
-  if (!show) {
-    return <Icon path={mdiCheck} size={1} color="green" />;
-  }
+const RequestsTable = () => {
+  const [rows, setRows] = useState([]);
+  useEffect(() => {
+    getRequests().then(fetchedRequests => {
+      const processedRequests = fetchedRequests.map((request,id) =>  {
+        const requestedBy = request.title;
+        const [yourAccount, amount, message] = request.message.split("||");
+        return {id : id+1, requestedBy, yourAccount, amount, message};
+      })
+      // console.log(fetchedRequests)
+      // console.log(processedRequests);
+      // console.log(rows);
+      // setRequests(processedRequests);
+      setRows(processedRequests);
+    }).catch(err => console.log(err));
+  }, [])
 
-  const handleClick = () => {
-    console.log('Pay');
+  const PayButton = (params: GridRenderCellParams<string>) => {
+    const handleClick = async() => {
+      const id = params.id;
+      console.log(id);
+      const details = rows[id-1];
+      const value =  Web3.utils.toWei(details.amount);
+      const transactionParameters = {
+        nonce : "0x00",
+        to : details.requestedBy,
+        from : details.yourAccount,
+        value: value
+      }
+      try {
+        const txHash = await window.ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [transactionParameters],
+        });
+        console.log(txHash)
+      } catch(err) {
+        if(err.code === 4100) {
+          alert("user has requested amount from other account. Please switch the account");
+        } else {
+          console.log(err);
+        }
+      }
+    };
+  
+    return (
+      <Button variant="contained" color="primary" onClick={handleClick}>
+        Pay
+      </Button>
+    );
   };
 
-  return (
-    <Button variant="contained" color="primary" onClick={handleClick}>
-      Pay
-    </Button>
-  );
-};
+  const columns: GridColDef[] = [
+    {
+      field: 'id',
+      headerName: 'Sl. No.',
+      width: 80,
+    },
+    {
+      field: 'yourAccount',
+      headerName: 'Requested From',
+      width: 250,
+    },
+    {
+      field: 'requestedBy',
+      headerName: 'Requested By',
+      width: 250,
+    },
+    {
+      field: 'amount',
+      headerName: 'Amount',
+      width: 80,
+      valueFormatter: (params) => `${params.value} ETH`,
+    },
+    {
+      field: 'message',
+      headerName: 'Message',
+      width: 200,
+    },
+    {
+      field: 'action',
+      headerName: 'Pay',
+      width: 100,
+      renderCell: PayButton,
+    },
+  ];
 
-const columns: GridColDef[] = [
-  {
-    field: 'id',
-    headerName: 'Sl. No.',
-    width: 80,
-  },
-  {
-    field: 'sender',
-    headerName: 'Requested From',
-    width: 250,
-  },
-  {
-    field: 'receiver',
-    headerName: 'Requested By',
-    width: 250,
-  },
-  {
-    field: 'amount',
-    headerName: 'Amount',
-    width: 80,
-    valueFormatter: (params) => `${params.value} ETH`,
-  },
-  {
-    field: 'status',
-    headerName: 'Status',
-    width: 100,
-  },
-  {
-    field: 'action',
-    headerName: 'Pay',
-    width: 100,
-    renderCell: PayButton,
-  },
-];
-
-const rows = [
-  {
-    id: 1,
-    sender: '0x00000000219ab540356cbb839cbe05303d7705fa',
-    receiver: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-    amount: 100,
-    status: 'Pending',
-  },
-  {
-    id: 2,
-    sender: '0x00000000219ab540356cbb839cbe05303d7705fa',
-    receiver: '0x00000000219ab540356cbb839cbe05303d770dc',
-    amount: 100,
-    status: 'Done',
-  },
-];
-const RequestsTable = () => {
   return (
     <Box
       sx={{
-        width: 880,
+        width: 970,
         height: 400,
       }}
     >
