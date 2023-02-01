@@ -10,15 +10,89 @@ import {
   Typography,
 } from '@mui/material';
 
+import Web3 from "web3";
+
+const PayClicked = async (details) => {
+  console.log(details);
+  const walletAddresses = (await window.ethereum.request({ method: 'eth_requestAccounts' }));
+  const userWalletAddress = walletAddresses[0];
+  const to = details.to;
+  // const value = details.value;
+  //need to figure out conversion of normal value to goereli test eth
+  const value = Web3.utils.toWei(details.value);
+  console.log(value);
+  // const value = Web3.utils.fromWei(details.value, "gwei");
+  const transactionParameters = {
+    nonce : "0x00",
+    to : to,
+    from : userWalletAddress,
+    value: value
+  }
+
+  console.log(transactionParameters);
+  try {
+    const txHash = await window.ethereum.request({
+      method: 'eth_sendTransaction',
+      params: [transactionParameters],
+    });
+    console.log(txHash)
+  } catch(err) {
+    console.log(err);
+  }
+  
+}
 const RequestForm = () => {
   const walletAddress = useRef<HTMLInputElement>(null);
   const amount = useRef<HTMLInputElement>(null);
   const description = useRef<HTMLInputElement>(null);
-  const submitHandler = (event: MouseEvent<HTMLButtonElement>) => {
+
+  const clearForm = () => {
+      walletAddress.current.value = "";
+      amount.current.value = "";
+      description.current.value = "";
+  }
+  const submitHandler = async(event: MouseEvent<HTMLButtonElement>) => {
     const enteredWalletAddress = walletAddress.current?.value;
     const enteredAmount = amount.current?.value;
     const enteredDescription = description.current?.value;
     console.log(enteredWalletAddress, enteredAmount, enteredDescription);
+
+    if(enteredAmount === "" || enteredWalletAddress === "" || enteredDescription === "") {
+      alert("Enter all values!");
+      return;
+    }
+    const walletAddresses = (await window.ethereum.request({ method: 'eth_requestAccounts' }));
+    const userWalletAddress = walletAddresses[0];
+    console.log(userWalletAddress);
+    const url = "http://127.0.0.1:9000/sendNotification";
+    const data = {
+      to : enteredWalletAddress,
+      amount : enteredAmount,
+      message : enteredDescription,
+      from: userWalletAddress
+    }
+    const response = await fetch(url, {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      mode: 'cors', // no-cors, *cors, same-origin
+      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: 'same-origin', // include, *same-origin, omit
+      headers: {
+        'Content-Type': 'application/json'
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: 'follow', // manual, *follow, error
+      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify(data) // body data type must match "Content-Type" header
+    });
+
+    const jsonResponse = await response.json();
+    // console.log(await response.json());
+    if(jsonResponse.message === "notification sent") {
+      alert("Notification sent successfully!");
+      clearForm();
+    }
+
+
   };
   return (
     <Box
@@ -99,6 +173,8 @@ const RequestForm = () => {
             marginTop: '1rem',
             width: '15rem',
           }}
+
+          onClick={clearForm}
         >
           Clear
         </Button>
@@ -109,6 +185,24 @@ const RequestForm = () => {
         >
           Request
         </Button>
+
+        {/* <Button
+          variant="contained"
+          style={{ marginTop: '1rem', width: '15rem' }}
+          onClick={async (e) => {
+            e.preventDefault();
+            const enteredWalletAddress = walletAddress.current?.value;
+            const enteredAmount = amount.current?.value;
+            const enteredDescription = description.current?.value;
+            const details = {
+              to : enteredWalletAddress,
+              value : enteredAmount
+            }
+            await PayClicked(details)
+          }}
+        >
+          Pay
+        </Button> */}
       </Box>
     </Box>
   );
