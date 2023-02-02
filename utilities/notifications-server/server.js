@@ -14,6 +14,7 @@ const signer = new ethers.Wallet(Pkey);
 
 app.post("/opt-in", async(req, res) => {
     try {
+        console.log(req.body.user);
         await PushAPI.channels.subscribe({
             signer: signer,
             channelAddress: `eip155:5:${channel_publicKey}`, // channel address in CAIP
@@ -103,6 +104,13 @@ app.get("/receiveNotifications/:user", async (req,res) => {
             // spam: true
         });
 
+        let spamNotifications = await PushAPI.user.getFeeds({
+            user : `eip155:5:${req.params.user}`,
+            env : "staging",
+            spam: true
+        })
+
+        notifications = notifications.concat(spamNotifications);
         notifications = notifications.filter(notification => notification.app === app_name);
 
         res.status(200).json({
