@@ -41,15 +41,23 @@ export default function Layout(props: Props) {
   const handleConnectClick = async () => {
     try {
       await connectSnap();
-      console.log(state);
       const installedSnap = await getSnap();
       // console.log(installedSnap);
       dispatch({
         type: MetamaskActions.SetInstalled,
         payload: installedSnap,
       });
+      try {
+        let stateData = await logState();
+        if(!stateData) {
+          await initiateState();
+        }
+      } catch(err) {
+        console.log(err);
+      }
+  
       const accounts = await connectMetamaskWallet();
-      console.log(accounts);
+      // console.log(accounts);
       if(accounts) {
         await initiateAccountDetails(accounts);
       }

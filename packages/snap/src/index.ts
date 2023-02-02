@@ -97,12 +97,13 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) => 
     case "initiateState":
       return await wallet.request({
         method: 'snap_manageState',
-        params: ['update', {web2Notifications: []}]
+        params: ['update', {web2Notifications: [], permissions: {notificationsOptIn : false}, finishedPayments : []}]
       });
 
     case "initiateAccountDetails":
       const account = request.params.account;
       // const accounts = parameters.accounts
+      
       return await wallet.request({
         method: 'snap_manageState',
         params: ['update', {...state, account : account}]
@@ -118,6 +119,17 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) => 
       } else {
         return [];
       }
+    case "notificationsOptIn":
+      return await wallet.request({
+        method: 'snap_manageState',
+        params: ['update', {...state, permissions : {...state?.permissions, notificationsOptIn : true}}]
+      });
+    
+    case "updateFinishedPayments":
+      return await wallet.request({
+        method: 'snap_manageState',
+        params: ['update', {...state, finishedPayments : [...state?.finishedPayments, request.params.sid]}]
+      })
     default:
       throw new Error('Method not found.');
   }

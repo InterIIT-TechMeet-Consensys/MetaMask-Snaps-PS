@@ -12,16 +12,15 @@ import {getRequests} from "./../utils";
 const RequestsTable = () => {
   const [rows, setRows] = useState([]);
   useEffect(() => {
-    getRequests().then(fetchedRequests => {
+    getRequests().then(async fetchedRequests => {
+      // const logStateData = await logState();
+      // const finishedPayments = logStateData.finishedPayments;
       const processedRequests = fetchedRequests.map((request,id) =>  {
         const requestedBy = request.title;
         const [yourAccount, amount, message] = request.message.split("||");
+        // const status = (finishedPayments.includes(request.sid) ? "Done" : "Pending");
         return {id : id+1, requestedBy, yourAccount, amount, message};
       })
-      // console.log(fetchedRequests)
-      // console.log(processedRequests);
-      // console.log(rows);
-      // setRequests(processedRequests);
       setRows(processedRequests);
     }).catch(err => console.log(err));
   }, [])

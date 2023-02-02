@@ -129,4 +129,31 @@ export const getRequests = async() => {
     ],
   });
 }
+
+export const notificationsOptIn = async() => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: [
+      defaultSnapOrigin,
+      {
+        method: 'notificationsOptIn',
+      }
+    ],
+  });
+}
+
+export const updateFinishedPayments = async(sid) => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: [
+      defaultSnapOrigin,
+      {
+        method: 'updateFinishedPayments',
+        params: {
+          sid
+        }
+      }
+    ],
+  });
+}
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');

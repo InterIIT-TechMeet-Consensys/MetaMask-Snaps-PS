@@ -12,6 +12,56 @@ const app_name = process.env.app_name;
 const channel_publicKey = process.env.channel_publicKey;
 const signer = new ethers.Wallet(Pkey);
 
+app.post("/opt-in", async(req, res) => {
+    try {
+        await PushAPI.channels.subscribe({
+            signer: signer,
+            channelAddress: `eip155:5:${channel_publicKey}`, // channel address in CAIP
+            userAddress: `eip155:5:${req.body.user}`, // user address in CAIP
+            onSuccess: () => {
+             console.log(`opt in success for - ${req.body.user}`);
+             res.status(200).json({
+                message : "opt-in successful"
+             })
+            },
+            onError: () => {
+              console.error(`opt in error - ${req.body.user}`);
+              res.status(400).json({
+                message : "opt-in failed"
+             })
+            },
+            env: 'staging'
+          })
+    } catch(err) {
+        console.log(err);
+    }
+})
+
+app.post("/opt-out", async(req,res) => {
+    try {
+        await PushAPI.channels.unsubscribe({
+            signer: signer,
+            channelAddress: `eip155:5:${channel_publicKey}`, // channel address in CAIP
+            userAddress: `eip155:5:${req.body.user}`, // user address in CAIP
+            onSuccess: () => {
+             console.log(`opt out success for - ${req.body.user}`);
+             res.status(200).json({
+                message : "opt-out successful"
+             })
+            },
+            onError: () => {
+              console.error(`opt in error - ${req.body.user}`);
+              res.status(400).json({
+                message : "opt-out failed"
+             })
+            },
+            env: 'staging'
+          })
+    } catch(err) {
+        console.log(err);
+    }
+})
+
 app.post("/sendNotification", async (req,res)=> {
     console.log(req.body.to);
     //notification format = from||to
