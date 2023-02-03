@@ -15,6 +15,7 @@ const RequestsTable = () => {
     getRequests().then(async fetchedRequests => {
       // const logStateData = await logState();
       // const finishedPayments = logStateData.finishedPayments;
+      console.log(fetchedRequests);
       const processedRequests = fetchedRequests.map((request,id) =>  {
         const requestedBy = request.title;
         const [yourAccount, amount, message] = request.message.split("||");

@@ -1,5 +1,6 @@
 import { OnRpcRequestHandler } from '@metamask/snap-types';
 import { OnCronjobHandler } from '@metamask/snap-types';
+import { OnTransactionHandler } from "@metamask/snap-types";
 
 /**
  * Get a message from the origin. For demonstration purposes only.
@@ -97,7 +98,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) => 
     case "initiateState":
       return await wallet.request({
         method: 'snap_manageState',
-        params: ['update', {web2Notifications: [], permissions: {notificationsOptIn : false}, finishedPayments : []}]
+        params: ['update', {web2Notifications: [], permissions: {notificationsOptIn : false}, finishedPayments : [], blockedAddresses : []}]
       });
 
     case "initiateAccountDetails":
@@ -129,7 +130,33 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) => 
       return await wallet.request({
         method: 'snap_manageState',
         params: ['update', {...state, finishedPayments : [...state?.finishedPayments, request.params.sid]}]
-      })
+      });
+
+    case "addBlockAddress":
+      const {walletAddress, name, description} = request.params.details;
+      return await wallet.request({
+        method: 'snap_manageState',
+        params: ['update', {...state, blockedAddresses : [...state.blockedAddresses, {
+          walletAddress,
+          name,
+          description
+        }]}]
+      });
+    
+    case "getBlockedAddresses":
+      return state?.blockedAddresses;
+    
+    case "deleteBlockedAddress":
+      let addresses = state?.blockedAddresses;
+      addresses.splice(request.params?.id, 1);
+      // return await wallet.request({
+      //   method: 'snap_manageState',
+      //   params: ['get']
+      // });
+      return await wallet.request({
+        method: 'snap_manageState',
+        params: ['update', {...state, blockedAddresses : [...addresses]}]
+      });
     default:
       throw new Error('Method not found.');
   }
@@ -148,4 +175,39 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
         }
       }).catch(err => console.log(err));
   }
+};
+
+const getInsights = async(transaction: Record<string, unknown>) => {
+  let state = await wallet.request({
+    method: 'snap_manageState',
+    params: ['get'],
+  });
+  const blockedAddressesDetails = state?.blockedAddresses;
+  const blocked = blockedAddressesDetails.map(addr => addr.walletAddress.toLowerCase());
+
+  let message;
+  
+  if(blocked.includes(transaction.to)) {
+    const data = blockedAddressesDetails[blocked.indexOf(transaction.to)];
+    message = {
+      message : "This address is in your block list",
+      accountAddress : data.walletAddress,
+      name : data.name,
+      description : data.description
+    }
+  } else {
+    message = {
+      message : "You haven't blocked this account"
+    }
+  }
+  const returnObject: Record<string, unknown> = message;
+
+  console.log(transaction);
+  return returnObject;
+}
+
+export const onTransaction: OnTransactionHandler = async ({ transaction }) => {
+  return {
+    insights: await getInsights(transaction),
+  };
 };
