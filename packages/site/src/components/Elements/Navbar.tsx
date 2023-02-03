@@ -34,6 +34,7 @@ const Navbar = (props: Props) => {
     setMobileOpen(!mobileOpen);
   };
 
+
   const drawer = (
     <div>
       <Toolbar />
@@ -90,7 +91,7 @@ const Navbar = (props: Props) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Responsive drawer
+            IIT Bhubaneswar Metamask Snap
           </Typography>
         </Toolbar>
       </AppBar>

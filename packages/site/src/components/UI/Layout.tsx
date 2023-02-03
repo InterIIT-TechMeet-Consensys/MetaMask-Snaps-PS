@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext } from "react";
+import { useContext} from "react";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -20,6 +20,8 @@ import Button from "@mui/material/Button";
 
 import { MetamaskActions, MetaMaskContext } from '../../hooks';
 import { connectSnap, getSnap, logState, initiateState, connectMetamaskWallet, initiateAccountDetails } from '../../utils';
+
+
 const drawerWidth = 240;
 
 type Props = {
@@ -35,7 +37,6 @@ type Props = {
 export default function Layout(props: Props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
   const [state, dispatch] = useContext(MetaMaskContext);
 
   const handleConnectClick = async () => {
@@ -91,14 +92,26 @@ export default function Layout(props: Props) {
     setMobileOpen(!mobileOpen);
   };
 
+  const handlePageChange = (text) => {
+    let url = "/";
+    console.log("clicked");
+    switch(text) {
+      case "Request":
+        url = "/";
+      case "Manage Block":
+        url = "/block"
+    }
+    
+  }
+
   const drawer = (
     <div>
       <Toolbar />
       <Divider />
       <List>
         {['Send', 'Request', 'Portfolio', 'Dapps'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
+          <ListItem key={text} disablePadding onClick={(e) => {e.preventDefault(); handlePageChange(text)}}>
+            <ListItemButton >
               <ListItemIcon>
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
               </ListItemIcon>
@@ -151,7 +164,7 @@ export default function Layout(props: Props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Responsive drawer
+            IIT Bhubaneswar Metamask Snap
           </Typography>
         </Toolbar>
       </AppBar>

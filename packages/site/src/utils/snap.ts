@@ -156,4 +156,49 @@ export const updateFinishedPayments = async(sid) => {
     ],
   });
 }
+
+export const blockAddress = async(details) => {
+  // console.log(details);
+  
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: [
+      defaultSnapOrigin,
+      {
+        method: 'addBlockAddress',
+        params: {
+          details
+        }
+      }
+    ],
+  });
+}
+
+export const getBlockedAddresses = async() => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: [
+      defaultSnapOrigin,
+      {
+        method: 'getBlockedAddresses',
+      }
+    ],
+  });
+}
+
+export const deleteBlockedAddress = async(id) => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: [
+      defaultSnapOrigin,
+      {
+        method: 'deleteBlockedAddress',
+        params : {
+          id : id
+        }
+      }
+    ],
+  });
+};
+
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');
