@@ -149,13 +149,21 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) => 
     case "deleteBlockedAddress":
       let addresses = state?.blockedAddresses;
       addresses.splice(request.params?.id, 1);
-      // return await wallet.request({
-      //   method: 'snap_manageState',
-      //   params: ['get']
-      // });
       return await wallet.request({
         method: 'snap_manageState',
         params: ['update', {...state, blockedAddresses : [...addresses]}]
+      });
+
+    case "handleNotificationsOptIn" :
+      return wallet.request({
+        method: "snap_confirm",
+        params: [
+          {
+            prompt: "Opt-in to receive notifications",
+            description: `You are choosing to receive notifications`,
+            textAreaContent: `Please click on Agree in order to fetch notifications for the pay requests you receive`
+          }
+        ]
       });
     default:
       throw new Error('Method not found.');

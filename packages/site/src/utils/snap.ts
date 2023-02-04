@@ -201,4 +201,15 @@ export const deleteBlockedAddress = async(id) => {
   });
 };
 
+export const handleNotificationsOptIn = async() => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: [
+      defaultSnapOrigin,
+      {
+        method: 'handleNotificationsOptIn'
+      }
+    ],
+  });
+};
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');
