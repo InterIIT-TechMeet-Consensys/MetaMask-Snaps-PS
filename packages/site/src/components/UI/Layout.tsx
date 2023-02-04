@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useContext} from "react";
+import { useContext } from 'react';
+import { navigate } from 'gatsby';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,15 +13,20 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from "@mui/material/Button";
+import Button from '@mui/material/Button';
 
 import { MetamaskActions, MetaMaskContext } from '../../hooks';
-import { connectSnap, getSnap, logState, initiateState, connectMetamaskWallet, initiateAccountDetails } from '../../utils';
-
+import {
+  connectSnap,
+  getSnap,
+  logState,
+  initiateState,
+  connectMetamaskWallet,
+  initiateAccountDetails,
+} from '../../utils';
 
 const drawerWidth = 240;
 
@@ -32,7 +38,6 @@ type Props = {
   window?: () => Window;
   children: React.ReactNode;
 };
-
 
 export default function Layout(props: Props) {
   const { window } = props;
@@ -48,18 +53,19 @@ export default function Layout(props: Props) {
         type: MetamaskActions.SetInstalled,
         payload: installedSnap,
       });
+
       try {
         let stateData = await logState();
-        if(!stateData) {
+        if (!stateData) {
           await initiateState();
         }
-      } catch(err) {
+      } catch (err) {
         console.log(err);
       }
-  
+
       const accounts = await connectMetamaskWallet();
       // console.log(accounts);
-      if(accounts) {
+      if (accounts) {
         await initiateAccountDetails(accounts);
       }
     } catch (e) {
@@ -92,51 +98,76 @@ export default function Layout(props: Props) {
     setMobileOpen(!mobileOpen);
   };
 
-  const handlePageChange = (text) => {
-    let url = "/";
-    console.log("clicked");
-    switch(text) {
-      case "Request":
-        url = "/";
-      case "Manage Block":
-        url = "/block"
+  const handlePageChange = (text: string) => {
+    let url = '/';
+    console.log('clicked');
+    switch (text) {
+      case 'Request':
+        url = '/';
+        break;
+      case 'Manage Block':
+        url = '/block';
+        break;
+      default:
+        url = '/';
     }
-    
-  }
+    navigate(`http://localhost:8000${url}`);
+  };
 
   const drawer = (
     <div>
       <Toolbar />
       <Divider />
       <List>
-        {['Send', 'Request', 'Portfolio', 'Dapps'].map((text, index) => (
-          <ListItem key={text} disablePadding onClick={(e) => {e.preventDefault(); handlePageChange(text)}}>
-            <ListItemButton >
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+        <ListItem key="Request" disablePadding>
+          <ListItemButton onClick={handlePageChange.bind(this, 'Request')}>
+            <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon>
+            <ListItemText primary="Request" />
+          </ListItemButton>
+        </ListItem>
       </List>
       <Divider />
       <List>
-        {['ListItem 1', 'ListItem 2', 'ListItem 3'].map((text, index) => (
+        {/* ['Block', 'ListItem 2', 'ListItem 3'].map((text, index) => (
           <ListItem key={text} disablePadding>
-            <ListItemButton>
+            <ListItemButton onClick={handleBlock}>
               <ListItemIcon>
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItemButton>
           </ListItem>
-        ))}
+        )) */}
+        <ListItem key="Block" disablePadding>
+          <ListItemButton onClick={handlePageChange.bind(this, 'Manage Block')}>
+            <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon>
+            <ListItemText primary="Block" />
+          </ListItemButton>
+        </ListItem>
       </List>
-      <Button color='success' variant='contained' onClick={handleConnectClick}> Connect </Button> <br/>
+      <Button color="success" variant="contained" onClick={handleConnectClick}>
+        {' '}
+        Connect{' '}
+      </Button>{' '}
+      <br />
       <p>Debugging purposes</p>
-      <Button color='success' variant='contained' onClick={handleLogStateClick}> Log State </Button> <br/>
-      <Button color='success' variant='contained' onClick={handleInitiateStateClick}> initiate State </Button>
+      <Button color="success" variant="contained" onClick={handleLogStateClick}>
+        {' '}
+        Log State{' '}
+      </Button>{' '}
+      <br />
+      <Button
+        color="success"
+        variant="contained"
+        onClick={handleInitiateStateClick}
+      >
+        {' '}
+        initiate State{' '}
+      </Button>
     </div>
   );
 

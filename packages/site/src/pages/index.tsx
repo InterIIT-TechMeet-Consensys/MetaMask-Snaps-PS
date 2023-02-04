@@ -8,7 +8,7 @@ import {
   shouldDisplayReconnectButton,
   notificationsOptIn,
   logState,
-  handleNotificationsOptIn
+  handleNotificationsOptIn,
 } from '../utils';
 import {
   ConnectButton,
@@ -111,27 +111,27 @@ const ErrorMessage = styled.div`
 `;
 
 const Index = () => {
-  window.ethereum.on("accountsChanged", async (accounts) => {
+  window.ethereum.on('accountsChanged', async (accounts) => {
     // console.log(accounts);
     try {
       await initiateAccountDetails(accounts);
-    } catch(err) {
+    } catch (err) {
       console.log(err);
     }
-  })
+  });
   const [state, dispatch] = useContext(MetaMaskContext);
 
   const [optIn, setOptIn] = useState(false);
 
-
   useEffect(() => {
-    logState().then(data => {
-      if(data?.permissions?.notificationsOptIn) {
-        setOptIn(true);
-      }
-    }).catch(err => console.log(err));
-
-  }, [])
+    logState()
+      .then((data) => {
+        if (data?.permissions?.notificationsOptIn) {
+          setOptIn(true);
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
   const handleConnectClick = async () => {
     try {
       await connectSnap();
@@ -156,59 +156,59 @@ const Index = () => {
     }
   };
 
-  const handleNotificationsOptInClick = async() => {
-
+  const handleNotificationsOptInClick = async () => {
     try {
       const optIn = await handleNotificationsOptIn();
-      if(!optIn) {
+      if (!optIn) {
         return;
       }
     } catch (err) {
       console.log(err);
     }
 
-    
-    
-    const walletAddresses = (await window.ethereum.request({ method: 'eth_requestAccounts' }));
+    const walletAddresses = await window.ethereum.request({
+      method: 'eth_requestAccounts',
+    });
     const user = walletAddresses[0];
-    const url = "http://127.0.0.1:9000/opt-in";
+    const url = 'http://127.0.0.1:9000/opt-in';
     const data = {
-      user
-    }
+      user,
+    };
     const response = await fetch(url, {
       method: 'POST', // *GET, POST, PUT, DELETE, etc.
       mode: 'cors', // no-cors, *cors, same-origin
       cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
       credentials: 'same-origin', // include, *same-origin, omit
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       redirect: 'follow', // manual, *follow, error
       referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: JSON.stringify(data) // body data type must match "Content-Type" header
+      body: JSON.stringify(data), // body data type must match "Content-Type" header
     });
 
     const jsonResponse = await response.json();
-    if(jsonResponse.message === "opt-in successful") {
+    if (jsonResponse.message === 'opt-in successful') {
       await notificationsOptIn();
-      alert("Subscribed for notifications successfully")
+      alert('Subscribed for notifications successfully');
       setOptIn(true);
-    } else if(jsonResponse.message === "opt-in failed") {
-      alert("Failed to subscribe to notifications. Try again Later!");
+    } else if (jsonResponse.message === 'opt-in failed') {
+      alert('Failed to subscribe to notifications. Try again Later!');
     }
-  }
+  };
   return (
     <>
       <Layout>
-      <Button variant="contained"
+        <Button
+          variant="contained"
           style={{
             marginTop: '1rem',
             width: '15rem',
           }}
           onClick={handleNotificationsOptInClick}
-          disabled = {optIn}
-          >
+          disabled={optIn}
+        >
           Opt-in (Notifications)
         </Button>
 
