@@ -211,7 +211,6 @@ const Index = () => {
         >
           Opt-in (Notifications)
         </Button>
-
         <RequestForm />
         <Box
           sx={{

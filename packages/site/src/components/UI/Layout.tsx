@@ -108,6 +108,9 @@ export default function Layout(props: Props) {
       case 'Manage Block':
         url = '/block';
         break;
+      case 'Add Alert':
+        url = '/addAlert';
+        break;
       default:
         url = '/';
     }
@@ -125,6 +128,14 @@ export default function Layout(props: Props) {
               <InboxIcon />
             </ListItemIcon>
             <ListItemText primary="Request" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem key="Add Alert" disablePadding>
+          <ListItemButton onClick={handlePageChange.bind(this, 'Add Alert')}>
+            <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon>
+            <ListItemText primary="Add Alert" />
           </ListItemButton>
         </ListItem>
       </List>
