@@ -91,7 +91,7 @@ const Navbar = (props: Props) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            IIT Bhubaneswar Metamask Snap
+            Metamask Snap
           </Typography>
         </Toolbar>
       </AppBar>

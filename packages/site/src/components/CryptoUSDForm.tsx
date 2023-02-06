@@ -23,6 +23,13 @@ const CryptoUSDForm = (props) => {
   const PercInputRef = React.useRef<HTMLInputElement>(null);
   const SelectInputRef = React.useRef<HTMLSelectElement>(null);
 
+  const clearForm = () => {
+    USDInputRef.current.value = null;
+    PercInputRef.current.value = null;
+    SelectInputRef.current.value = null;
+    setCrypto("");
+    setTarget(true);
+  }
   const toggleHandler = (e: any) => {
     if (e.target.value === 'Target') {
       setTarget(true);
@@ -32,19 +39,19 @@ const CryptoUSDForm = (props) => {
   };
 
   const addAlertHandler: MouseEventHandler = async () => {
-    console.log('Alert');
-    console.log(crypto);
-    if (target) {
-      console.log('Target Price: ');
-      console.log(USDInputRef.current?.value);
-    } else {
-      console.log('Percentage Change: ');
-      console.log(PercInputRef.current?.value);
+
+    const getTokenName = (coin : string) => {
+      switch(coin) {
+        case "BTC":
+          return "bitcoin"
+        case "ETH":
+          return "ethereum"
+      }
     }
-    console.log(SelectInputRef.current?.value);
+  
 
     const tokenAlert = {
-      tokenName : crypto,
+      tokenName : getTokenName(crypto),
       isPercent : !target,
       value : (!target ? PercInputRef.current?.value : USDInputRef.current?.value),
       lookingFor : (SelectInputRef.current?.value)
@@ -52,6 +59,7 @@ const CryptoUSDForm = (props) => {
 
     try {
         await addNewTokenAlert(tokenAlert);
+        // clearForm();
     } catch(err) {
       console.log(err);
     }

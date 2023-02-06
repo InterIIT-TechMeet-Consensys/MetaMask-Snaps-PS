@@ -30,7 +30,7 @@ export const getCoinPrices = async(coins: string[]) => {
       const response = await fetch(`${API_URL}${coin}`);
       const data = await response.json();
       return {
-        name: data.name,
+        name: data.name.toLowerCase(),
         price: data.market_data.current_price.usd,
       };
     })
@@ -82,6 +82,21 @@ const notifyUser = async() => {
   });
 }
 
+
+const deleteWatchListItem = async(index : Number) => {
+
+  let state = await wallet.request({
+    method: 'snap_manageState',
+    params: ['get']
+  });
+
+  let watchList = state?.watchList;
+  watchList.splice(index, 1);
+  return await wallet.request({
+        method: 'snap_manageState',
+        params: ['update', {...state, watchList : [...watchList]}]
+  });
+}
 export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) => {
 
   let state = await wallet.request({
@@ -184,39 +199,128 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) => 
       });
 
     case "addNewTokenAlert":
-      console.log(request.params.tokenAlert);
+      console.log(request.params?.tokenAlert);
       const tokenName = request.params?.tokenAlert.tokenName;
       const isPercent = request.params?.tokenAlert.isPercent;
-      const value = request.params?.tokenAlert.value;
+      const value = parseInt(request.params?.tokenAlert.value);
       const lookingFor = (request.params?.tokenAlert.lookingFor === "Rises" ? 1 : -1);
-      return await wallet.request({
+      // const price = (await getCoinPrices([tokenName]));
+      
+      return getCoinPrices([tokenName]).then(async priceDetails => {
+        const priceAtTimeOfAddition = priceDetails[0].price;
+        let targetPrice = value;
+        if(isPercent) {
+          if(lookingFor == 1) {
+            targetPrice = priceAtTimeOfAddition * (1 + (value/100))
+          } else if (lookingFor == -1) {
+            targetPrice = priceAtTimeOfAddition * (1 - (value/100))
+          }
+        }
+        return await wallet.request({
         method: 'snap_manageState',
         params: ['update', {...state, watchList : [...state?.watchList, {
           tokenName,
           isPercent,
           value,
-          lookingFor
+          lookingFor,
+          priceAtTimeOfAddition,
+          targetPrice
         }]}]
       });
+      }).catch(err => console.log(err));
+      
 
     case "getWatchList":
-      return state.watchList;
+      return state?.watchList;
     default:
       throw new Error('Method not found.');
   }
 };
 
+const notifyAlerts = async(messages : string[]) => {
+
+      return await wallet.request({
+        method: 'snap_notify',
+        params: [
+          {
+            type: 'inApp',
+            message: `${messages[0].substring(0, 49)}`,
+          },
+        ],
+      })
+}
+
+const getPrice = (priceArray, tokenName : string) => {
+  const filteredPrice = priceArray.filter(item => item.name === tokenName);
+  return filteredPrice[0].price;
+}
+
+let shortForms = new Map();
+shortForms.set("bitcoin", "BTC");
+shortForms.set("ethereum", "ETC");
+
+const getShortForm = (coinName : string) => {
+  return shortForms.get(coinName);
+}
 export const onCronjob: OnCronjobHandler = async ({ request }) => {
-  let state = await wallet.request({
-    method: 'snap_manageState',
-    params: ['get'],
-  });
+  
   switch (request.method) {
     case "fetchWeb2PayRequests":
-      return getNotifications(state.account).then(hasNew=> {
+      let state1 = await wallet.request({
+        method: 'snap_manageState',
+        params: ['get'],
+      });
+      return getNotifications(state1.account).then(hasNew=> {
         if(hasNew) {
           return notifyUser().then(res=>console.log(res)).catch(err => console.log(err))
         }
+      }).catch(err => console.log(err));
+    
+    case "checkCoinAlert":
+      let state = await wallet.request({
+        method: 'snap_manageState',
+        params: ['get'],
+      });
+      let needToBeAlerted : string[] = [];
+      let satisfyingIndices = [];
+      const watchList = state?.watchList;
+        let coins = watchList.map(item => item.tokenName);
+        coins = coins.filter((coin : string, idx : Number) => (coins.indexOf(coin) === idx));
+        let priceDetails = [];
+
+        let temp = "";
+      try {
+        priceDetails = await getCoinPrices(coins);
+      } catch(err) {
+        console.log(err);
+      }
+
+      watchList.forEach((item,idx) => {
+        const price = getPrice(priceDetails, item.tokenName);
+        let message = "";
+        if(item.lookingFor == 1 && price >= item.targetPrice) {
+          message = `${getShortForm(item.tokenName)} - ${price} USD, crossed your target of ${item.targetPrice}`;
+        } else if(item.lookingFor == -1 && price <= item.targetPrice) {
+          message = `${getShortForm(item.tokenName)} - ${price} USD, below your target of ${item.targetPrice}`;
+        }
+
+        if(message != "") {
+          needToBeAlerted.push(message);
+          satisfyingIndices.push(idx);
+        }
+      })
+      if(needToBeAlerted.length == 0) {
+        return;
+      }
+      return notifyAlerts(needToBeAlerted).then(async res => {
+        const index = satisfyingIndices[0];
+        // return await deleteWatchListItem(index);
+        let watchList = state?.watchList;
+        watchList.splice(index, 1);
+        return await wallet.request({
+              method: 'snap_manageState',
+              params: ['update', {...state, watchList : [...watchList]}]
+        });
       }).catch(err => console.log(err));
   }
 };

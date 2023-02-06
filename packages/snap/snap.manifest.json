@@ -1,13 +1,13 @@
 {
   "version": "0.1.0",
   "description": "An example Snap written in TypeScript.",
-  "proposedName": "IIT BBS",
+  "proposedName": "Metamask Snap",
   "repository": {
     "type": "git",
     "url": "https://github.com/MetaMask/template-snap-monorepo.git"
   },
   "source": {
-    "shasum": "WTZJJqVHtYTbkFAk+98W1xxhrufjSvGRXa84Q0kVjI4=",
+    "shasum": "QW9XkQFHNquoI6/6i5m6J7pD//ybwq1+P2Ti/HxOVJI=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -35,6 +35,18 @@
           },
           "request": {
             "method": "fetchWeb2PayRequests"
+          }
+        },
+        {
+          "expression": {
+            "minute": "*",
+            "hour": "*",
+            "dayOfMonth": "*",
+            "month": "*",
+            "dayOfWeek": "*"
+          },
+          "request": {
+            "method": "checkCoinAlert"
           }
         }
       ]
