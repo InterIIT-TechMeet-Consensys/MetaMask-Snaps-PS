@@ -13,7 +13,9 @@ import {
 import Icon from '@mdi/react';
 import { mdiBitcoin, mdiEthereum } from '@mdi/js';
 
-const CryptoUSDForm = () => {
+import { addNewTokenAlert} from '../utils';
+
+const CryptoUSDForm = (props) => {
   const [crypto, setCrypto] = React.useState<string>('');
   const [target, setTarget] = React.useState<boolean>(true);
 
@@ -29,7 +31,7 @@ const CryptoUSDForm = () => {
     }
   };
 
-  const addAlertHandler: MouseEventHandler = () => {
+  const addAlertHandler: MouseEventHandler = async () => {
     console.log('Alert');
     console.log(crypto);
     if (target) {
@@ -40,6 +42,20 @@ const CryptoUSDForm = () => {
       console.log(PercInputRef.current?.value);
     }
     console.log(SelectInputRef.current?.value);
+
+    const tokenAlert = {
+      tokenName : crypto,
+      isPercent : !target,
+      value : (!target ? PercInputRef.current?.value : USDInputRef.current?.value),
+      lookingFor : (SelectInputRef.current?.value)
+    }
+
+    try {
+        await addNewTokenAlert(tokenAlert);
+    } catch(err) {
+      console.log(err);
+    }
+    console.log(tokenAlert);
   };
 
   return (

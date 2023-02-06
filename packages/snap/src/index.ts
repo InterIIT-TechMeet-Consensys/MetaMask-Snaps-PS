@@ -23,6 +23,23 @@ export const getMessage = (originString: string): string =>
  * @throws If the `snap_confirm` call failed.
  */
 
+export const getCoinPrices = async(coins: string[]) => {
+  const API_URL = "https://api.coingecko.com/api/v3/coins/";
+  const responseArray = await Promise.all(
+    coins.map(async (coin) => {
+      const response = await fetch(`${API_URL}${coin}`);
+      const data = await response.json();
+      return {
+        name: data.name,
+        price: data.market_data.current_price.usd,
+      };
+    })
+  ).then(data => {return data});
+  console.log(responseArray);
+  return responseArray;
+}
+
+
 const getNotifications = async(account) => {
   console.log("sending notifications");
   const response = await fetch(`http://127.0.0.1:9000/receiveNotifications/${account}`);
@@ -98,7 +115,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) => 
     case "initiateState":
       return await wallet.request({
         method: 'snap_manageState',
-        params: ['update', {web2Notifications: [], permissions: {notificationsOptIn : false}, finishedPayments : [], blockedAddresses : []}]
+        params: ['update', {web2Notifications: [], permissions: {notificationsOptIn : false}, finishedPayments : [], blockedAddresses : [], watchList : []}]
       });
 
     case "initiateAccountDetails":
@@ -165,6 +182,25 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) => 
           }
         ]
       });
+
+    case "addNewTokenAlert":
+      console.log(request.params.tokenAlert);
+      const tokenName = request.params?.tokenAlert.tokenName;
+      const isPercent = request.params?.tokenAlert.isPercent;
+      const value = request.params?.tokenAlert.value;
+      const lookingFor = (request.params?.tokenAlert.lookingFor === "Rises" ? 1 : -1);
+      return await wallet.request({
+        method: 'snap_manageState',
+        params: ['update', {...state, watchList : [...state?.watchList, {
+          tokenName,
+          isPercent,
+          value,
+          lookingFor
+        }]}]
+      });
+
+    case "getWatchList":
+      return state.watchList;
     default:
       throw new Error('Method not found.');
   }

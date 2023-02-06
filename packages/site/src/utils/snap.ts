@@ -212,4 +212,32 @@ export const handleNotificationsOptIn = async() => {
     ],
   });
 };
+
+export const addNewTokenAlert = async(tokenAlert) => {
+  console.log(tokenAlert);
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: [
+      defaultSnapOrigin,
+      {
+        method: 'addNewTokenAlert',
+        params : {
+          tokenAlert
+        }
+      }
+    ],
+  });
+}
+
+export const getWatchList = async() => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: [
+      defaultSnapOrigin,
+      {
+        method: 'getWatchList'
+      }
+    ],
+  });
+}
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');
