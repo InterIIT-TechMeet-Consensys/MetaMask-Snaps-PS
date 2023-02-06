@@ -23,13 +23,7 @@ const CryptoUSDForm = (props) => {
   const PercInputRef = React.useRef<HTMLInputElement>(null);
   const SelectInputRef = React.useRef<HTMLSelectElement>(null);
 
-  const clearForm = () => {
-    USDInputRef.current.value = null;
-    PercInputRef.current.value = null;
-    SelectInputRef.current.value = null;
-    setCrypto("");
-    setTarget(true);
-  }
+
   const toggleHandler = (e: any) => {
     if (e.target.value === 'Target') {
       setTarget(true);
@@ -59,7 +53,7 @@ const CryptoUSDForm = (props) => {
 
     try {
         await addNewTokenAlert(tokenAlert);
-        // clearForm();
+        await props.fetchWatchList();
     } catch(err) {
       console.log(err);
     }

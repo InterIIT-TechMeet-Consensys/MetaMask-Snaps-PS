@@ -240,4 +240,19 @@ export const getWatchList = async() => {
     ],
   });
 }
+
+export const deleteAlert = async (id) => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: [
+      defaultSnapOrigin,
+      {
+        method: 'deleteAlert',
+        params : {
+          id
+        }
+      }
+    ],
+  });
+}
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');

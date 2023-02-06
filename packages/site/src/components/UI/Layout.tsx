@@ -141,16 +141,6 @@ export default function Layout(props: Props) {
       </List>
       <Divider />
       <List>
-        {/* ['Block', 'ListItem 2', 'ListItem 3'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton onClick={handleBlock}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        )) */}
         <ListItem key="Block" disablePadding>
           <ListItemButton onClick={handlePageChange.bind(this, 'Manage Block')}>
             <ListItemIcon>

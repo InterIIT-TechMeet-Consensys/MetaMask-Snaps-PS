@@ -232,6 +232,14 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) => 
 
     case "getWatchList":
       return state?.watchList;
+    
+    case "deleteAlert":
+      let watchList = state?.watchList;
+      watchList.splice(request.params?.id, 1);
+      return await wallet.request({
+        method: 'snap_manageState',
+        params: ['update', {...state, watchList : [...watchList]}]
+      });
     default:
       throw new Error('Method not found.');
   }
