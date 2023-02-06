@@ -13,7 +13,7 @@ import {
 import Icon from '@mdi/react';
 import { mdiBitcoin, mdiEthereum } from '@mdi/js';
 
-import { addNewTokenAlert} from '../utils';
+import { addNewTokenAlert } from '../utils';
 
 const CryptoUSDForm = (props) => {
   const [crypto, setCrypto] = React.useState<string>('');
