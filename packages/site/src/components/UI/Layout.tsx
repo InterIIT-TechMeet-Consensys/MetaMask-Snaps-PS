@@ -17,6 +17,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import Icon from '@mdi/react';
+import { mdiBlockHelper, mdiCashFast, mdiChartLine } from '@mdi/js';
 
 import { MetamaskActions, MetaMaskContext } from '../../hooks';
 import {
@@ -125,7 +127,7 @@ export default function Layout(props: Props) {
         <ListItem key="Request" disablePadding>
           <ListItemButton onClick={handlePageChange.bind(this, 'Request')}>
             <ListItemIcon>
-              <InboxIcon />
+              <Icon path={mdiCashFast} size={1.5} color="green" />
             </ListItemIcon>
             <ListItemText primary="Request" />
           </ListItemButton>
@@ -133,42 +135,61 @@ export default function Layout(props: Props) {
         <ListItem key="Add Alert" disablePadding>
           <ListItemButton onClick={handlePageChange.bind(this, 'Add Alert')}>
             <ListItemIcon>
-              <InboxIcon />
+              <Icon path={mdiChartLine} size={1.5} color="black" />
             </ListItemIcon>
             <ListItemText primary="Add Alert" />
           </ListItemButton>
         </ListItem>
-      </List>
-      <Divider />
-      <List>
         <ListItem key="Block" disablePadding>
           <ListItemButton onClick={handlePageChange.bind(this, 'Manage Block')}>
             <ListItemIcon>
-              <InboxIcon />
+              <Icon path={mdiBlockHelper} size={1.5} color="red" />
             </ListItemIcon>
             <ListItemText primary="Block" />
           </ListItemButton>
         </ListItem>
       </List>
-      <Button color="success" variant="contained" onClick={handleConnectClick}>
-        {' '}
-        Connect{' '}
-      </Button>{' '}
-      <br />
-      <p>Debugging purposes</p>
-      <Button color="success" variant="contained" onClick={handleLogStateClick}>
-        {' '}
-        Log State{' '}
-      </Button>{' '}
-      <br />
-      <Button
-        color="success"
-        variant="contained"
-        onClick={handleInitiateStateClick}
+      <Divider />
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          paddingTop: '2rem',
+          alignItems: 'center',
+        }}
       >
-        {' '}
-        initiate State{' '}
-      </Button>
+        <Button
+          color="success"
+          variant="contained"
+          onClick={handleConnectClick}
+          style={{
+            width: '10rem',
+            marginBottom: '3rem',
+          }}
+        >
+          {' '}
+          Connect{' '}
+        </Button>{' '}
+        <br />
+        <p>Debugging purposes</p>
+        <Button
+          color="success"
+          variant="contained"
+          onClick={handleLogStateClick}
+        >
+          {' '}
+          Log State{' '}
+        </Button>{' '}
+        <br />
+        <Button
+          color="success"
+          variant="contained"
+          onClick={handleInitiateStateClick}
+        >
+          {' '}
+          initiate State{' '}
+        </Button>
+      </Box>
     </div>
   );
 
