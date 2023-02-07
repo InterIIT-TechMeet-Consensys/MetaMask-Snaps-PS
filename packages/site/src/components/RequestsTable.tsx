@@ -33,7 +33,8 @@ const RequestsTable = () => {
       const id = params.id;
       console.log(id);
       const details = rows[id - 1];
-      const value = Web3.utils.toWei(details.amount);
+      const value = Web3.utils.toHex(Web3.utils.toWei(details.amount));
+      // const value2=Web3.utils.toHex(value);
       const transactionParameters = {
         nonce: '0x00',
         to: details.requestedBy,
