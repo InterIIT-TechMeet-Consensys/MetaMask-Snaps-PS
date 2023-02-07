@@ -127,7 +127,7 @@ export default function Layout(props: Props) {
         <ListItem key="Request" disablePadding>
           <ListItemButton onClick={handlePageChange.bind(this, 'Request')}>
             <ListItemIcon>
-              <Icon path={mdiCashFast} size={1.5} color="green" />
+              <Icon path={mdiCashFast} size={1.5} color="black" />
             </ListItemIcon>
             <ListItemText primary="Request" />
           </ListItemButton>
@@ -143,7 +143,7 @@ export default function Layout(props: Props) {
         <ListItem key="Block" disablePadding>
           <ListItemButton onClick={handlePageChange.bind(this, 'Manage Block')}>
             <ListItemIcon>
-              <Icon path={mdiBlockHelper} size={1.5} color="red" />
+              <Icon path={mdiBlockHelper} size={1.5} color="black" />
             </ListItemIcon>
             <ListItemText primary="Block" />
           </ListItemButton>
