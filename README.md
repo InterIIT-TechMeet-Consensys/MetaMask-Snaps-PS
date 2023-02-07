@@ -68,13 +68,6 @@ The Request Ether feature allows you to send a request for a specific amount of 
 ### How is this useful?
 Imagine browsing through Web3 and suddenly running out of Ethereum or developing a Dapp and not having sufficient ether to test. You will ask your friends or colleagues to lend you some ether, right? Wouldn't it be tedious to message him your public Id and request him to send you some ether? Therefore, we have integrated a feature to request ether quickly. Upon receiving a pay request, the sender gets notified. They can then send the ether with a single button click.
 
-### GIF speaks better than words
-#### Sending a Pay request
-///GIF for sending a pay request
-
-#### Receiving and responding for a pay request
-///FIF for receivig and responding for a pay request
-
 ### Methodology
 #### Sending a Pay Request
 1. User enters the public Id of the person that he wants to request from along with the amount of ether and a message in the Request Form.
@@ -96,16 +89,6 @@ The Block Addresses feature provides you with a safe and secure way to block any
 ### How is this useful?
 There are several cases where people were scammed while making transactions on Dapps or smart contracts. Also, if we are aware that someone’s account is compromised, we must ensure that we do not make any transactions with them. It would be helpful if we could list the accounts we feel are harmful, so we can be informed when interacting with such accounts or smart contracts. Therefore, we have implemented a feature where users can maintain their block list. The users will be informed when they are interacting with those accounts at a later point.
 
-
-### GIF speaks better than words
-#### Adding an address into blocklist
-///GIF for Adding an address into blocklist
-
-#### Making transaction with an account in the blocklist
-///GIF for Making transaction with an account in the blocklist
-
-#### Making transaction with an account not in the blocklist
-///GIF for Making transaction with an account not in the blocklist
 
 ### Methodology
 #### Adding addresses to block list
@@ -130,10 +113,6 @@ User's can add an alert so that they are notified whenever a coin's price satisf
 3. The target price. It can be entered as the coin's target price in USD or the percentage change of the coin with respect to current price.
 ### How is this useful?
 Crypto currencies are very volatile. So every minute matters if you want to purchase or sell a coin. It is highly useful if you get price alerts directly in your wallet. Therefore, we offer a solution where the user can add price alerts and are notified directly in their wallet.
-
-### GIF speaks better than words
-#### Adding a price alert
-///GIF for Adding a price alert
 
 ### Methodology
 #### Adding a price alert
